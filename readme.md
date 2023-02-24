@@ -8,7 +8,8 @@
 caddy start
 ```
 
-# Put the Robinhood Service Configuration in /etc/systemd/system/robinhood.service
+# Setup the Robinhood Service
+* Put the Robinhood Service Configuration in /etc/systemd/system/robinhood.service
 ```
 [Unit]
 Description=Robinhood Server
@@ -25,7 +26,7 @@ RestartSec=5s
 WantedBy=multi-user.target
 ```
 
-# Start the robinhood server
+* Start the robinhood server
 ```
 sudo systemctl start robinhood
 ```
