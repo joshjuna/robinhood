@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+uvloop
+gunicorn
+httptools
+pymongo
+pyotp
+robin-stocks
+boto3
