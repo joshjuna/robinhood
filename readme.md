@@ -49,8 +49,13 @@ sudo systemctl start robinhood
 ```
 
 # Run the server
+```
 uvicorn main:app --reload
+```
+
+```
 gunicorn -w 1 -k uvicorn.workers.UvicornWorker main:app
+```
 
 # Call the EC2 Server
 ```
