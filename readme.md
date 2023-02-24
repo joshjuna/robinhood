@@ -10,6 +10,7 @@ sudo apt install caddy
 ```
 
 * Run this to allow caddy to download ssl certs
+
 ```sudo setcap CAP_NET_BIND_SERVICE=+eip $(which caddy)```
 
 * Write to CaddyFile
