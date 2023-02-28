@@ -1,1 +1,3 @@
 main.log
+__pycache__/**
+venv/**
