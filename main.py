@@ -237,7 +237,8 @@ def robin_buy(symbol, price, qty):
         time.sleep(5)
         order_status = rh.get_stock_order_info(order_result['id'])
         logger.debug(order_status)
-        logger.info("BUY Order Status: {}, qty: {}, price: {}".format(order_status['state'], order_status['quantity'], order_status['average_price']))
+        logger.info("BUY Order Status: {}, qty: {}, price: {}".format(order_status['state'], order_status['quantity'],
+                                                                      order_status['average_price']))
         return order_status['average_price']
     else:
         return price
@@ -278,6 +279,7 @@ def robin_get_position(symbol):
             logger.debug('stock_position: {}'.format(stock_position))
             return stock_position
 
+    logger.debug('stock_position: {}'.format(None))
     return None
 
 
@@ -292,12 +294,33 @@ def date_diff(date_2, date_1):
 
 @app.post("/place_order")
 async def place_order(info: Request):
+    logger.info("*********************************")
+    logger.info("Raw Request: {}".format(info.__dict__))
     req = await info.json()
+    logger.info("Request: {}".format(req))
     await login()
+
     symbol = req['symbol']
     price = req['price']
     qty = req['qty']
-    return robin_buy(symbol, price, qty)
+    buy_plot = req['buy_plot']
+
+    current_position = robin_get_position(symbol)
+    action = "buy" if (buy_plot > 0) else "sell"
+
+    if action == "buy":
+        if current_position is None or (math.floor(float(current_position['quantity'])) < 1 and math.floor(
+                float(current_position['shares_held_for_buys'])) < 1):
+            return robin_buy(symbol, price, qty)
+        else:
+            logger.info("Already BOUGHT")
+            return "Already BOUGHT"
+    elif action == "sell":
+        if current_position is not None and math.floor(float(current_position['shares_available_for_exercise'])) >= qty:
+            return robin_sell(symbol, price, qty)
+        else:
+            logger.info("Nothing to SELL")
+            return "Nothing to SELL"
 
 
 @app.post("/get_position")
