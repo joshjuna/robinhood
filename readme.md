@@ -13,6 +13,8 @@ sudo apt install caddy
 
 ```sudo setcap CAP_NET_BIND_SERVICE=+eip $(which caddy)```
 
+```caddy trust```
+
 * Write to CaddyFile
 ```
 54.187.200.254.nip.io {
@@ -49,21 +51,28 @@ sudo systemctl start robinhood
 ```
 
 # Run the server
+### On AWS EC2 host
 ```
 uvicorn main:app --reload
 ```
-
+### Localhost
 ```
 gunicorn -w 1 -k uvicorn.workers.UvicornWorker main:app
 ```
 
 # Call the EC2 Server
+### Prod: get_position
 ```
 curl -H 'Content-Type: application/json; charset=utf-8' -d '{"symbol": "AAPL"}' -X POST 'https://54.187.200.254.nip.io/get_position'
 ```
-
+### Localhost: get_position
 ```
-curl -H 'Content-Type: application/json; charset=utf-8' -d '{"symbol" : "BBBY", "time" : "2023-02-23T14:30:00Z", "price" : 1.61, "qty":50, "interval" : D, "buy_plot":-1}' -X POST 'https://54.187.200.254.nip.io/place_order'
+curl -H 'Content-Type: application/json; charset=utf-8' -d '{"symbol": "AAPL"}' -X POST 'http://localhost:8000/get_position'
+```
+
+### Prod: place_order
+```
+curl -H 'Content-Type: application/json; charset=utf-8' -d '{"symbol" : "ACN", "time" : "2023-08-23T14:30:00Z", "price" : 315.00, "qty":1, "interval" : "D", "buy_plot":1}' -X POST 'https://54.187.200.254.nip.io/place_order'
 ```
 
 # TradingView Notification Endpoint

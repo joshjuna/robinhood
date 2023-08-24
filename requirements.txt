@@ -1,4 +1,6 @@
+robin_stocks
 fastapi
+click
 uvicorn
 uvloop
 gunicorn
